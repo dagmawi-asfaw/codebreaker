@@ -4,36 +4,38 @@
 //
 //  Created by FITAWRARI DEJENE on 10/21/26.
 //
- 
-import SwiftUI
 
+import SwiftUI
 
 struct MoreContentView: View {
     var body: some View {
-        
-           
+
     }
 }
 
 struct ContentView: View {
-    
-    
-    var horizontalShi: some View = HStack{
-        Text("this is some horizontal shit").font(.title3)
-        Image(systemName:       "heart.fill").foregroundColor(.blue)
-    }
-    
 
-    
-    var verticalShi: some View = VStack{   Image(systemName: "heart.fill").foregroundColor(.red)
-            .imageScale(.large)
-            .foregroundStyle(.tint)
-        Text("this is some vertical shi").font(.title2)
-    }
-    
     var body: some View {
-        verticalShi
-        horizontalShi
+        VStack {
+            pegs(colors: [.red, .blue, .green, .yellow])
+            pegs(colors: [.red, .blue, .yellow, .yellow])
+            pegs(colors: [.red, .red, .green, .yellow])
+            pegs(colors: [.blue, .blue, .green, .yellow])
+
+        }.padding()
+    }
+
+    func pegs(colors: [Color]) -> some View {
+        HStack {
+            ForEach(colors.indices, id: \.self) { index in
+                RoundedRectangle(cornerRadius: 10).foregroundColor(
+                    colors[index]
+                ).aspectRatio(1, contentMode: .fit)
+
+            }
+            MatchMarkers()
+
+        }.padding()
     }
 }
 
