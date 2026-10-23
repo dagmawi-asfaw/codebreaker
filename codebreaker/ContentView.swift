@@ -33,7 +33,7 @@ struct ContentView: View {
                 ).aspectRatio(1, contentMode: .fit)
 
             }
-            MatchMarkers()
+            MatchMarkers(matches: [.exact, .inexact, .nomatch,.exact])
 
         }.padding()
     }

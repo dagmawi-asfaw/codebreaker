@@ -13,25 +13,38 @@ enum Match {
 }
 
 struct MatchMarkers: View {
+    var matches: [Match]
     var body: some View {
-        HStack {
-            VStack {
-                Circle().foregroundColor(Color.primary)
-                Circle().strokeBorder(Color.primary, lineWidth: 3).aspectRatio(
-                    1,
-                    contentMode: .fit
-                )
+        VStack {
+            HStack {
+                matchMarker(peg: 0)
+                matchMarker(peg: 1)
             }
-            VStack {
-                Circle().foregroundColor(Color.primary)
-                Circle().foregroundColor(Color.primary)
+            HStack {
+                matchMarker(peg: 2)
+                matchMarker(peg: 3)
             }
         }
+
     }
-    
-    
+
+    func matchMarker(peg: Int) -> some View {
+        //exact matches found
+        let exactCount: Int = matches.count(where: { match in match == .exact })
+        //includes exact and in exact matches
+        let foundCount: Int = matches.count(where: { match in match != .nomatch
+        })
+        return Circle()
+            .fill(exactCount > peg ? Color.primary : Color.clear, )
+            .strokeBorder(
+                foundCount > peg ? Color.primary : Color.clear,
+                lineWidth: 3
+            )
+            .aspectRatio(1, contentMode: .fit)
+    }
+
 }
 
 #Preview {
-    MatchMarkers()
+    MatchMarkers(matches: [.exact, .inexact, .nomatch, .exact])
 }
