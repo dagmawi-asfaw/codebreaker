@@ -25,17 +25,25 @@ struct ContentView: View {
         }.padding()
     }
 
+     
     func pegs(colors: [Color]) -> some View {
-        HStack {
-            ForEach(colors.indices, id: \.self) { index in
-                RoundedRectangle(cornerRadius: 10).foregroundColor(
-                    colors[index]
-                ).aspectRatio(1, contentMode: .fit)
+        if(colors.count == 4 ){
+            HStack {
+                ForEach(colors.indices, id: \.self) { index in
+                    RoundedRectangle(cornerRadius: 10).foregroundColor(
+                        colors[index]
+                    ).aspectRatio(1, contentMode: .fit)
 
+                }
+                MatchMarkers(matches: [.exact, .inexact, .nomatch,.exact])
+
+            }.padding()
+        }
+        else {
+               EmptyView()
             }
-            MatchMarkers(matches: [.exact, .inexact, .nomatch,.exact])
-
-        }.padding()
+        
+     
     }
 }
 
