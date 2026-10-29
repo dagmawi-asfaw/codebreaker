@@ -21,7 +21,7 @@ struct CodeBreakerContentView: View {
                 }
                 Button("Guess") {
                     withAnimation {
-                        game.attemptGuess()
+                           game.()
                     }
 
                 }
@@ -30,7 +30,7 @@ struct CodeBreakerContentView: View {
 
     }
 
-    func view(for code: ArowOfPegs) -> some View {
+    func view(for code: Code) -> some View {
         HStack {
             ForEach(code.pegs.indices, id: \.self) { index in
                 RoundedRectangle(cornerRadius: 10)
@@ -42,7 +42,11 @@ struct CodeBreakerContentView: View {
                     }
 
             }
-            MatchMarkers(matches: game.match(against: game.aMasterRowOfPegs))
+            MatchMarkers(
+                matches: game.aGuessRowOfPegs.match(
+                    against: game.aMasterRowOfPegs
+                )
+            )
 
         }.padding()
     }

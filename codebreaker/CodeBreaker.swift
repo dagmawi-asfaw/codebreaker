@@ -11,54 +11,87 @@ typealias Peg = Color
 
 struct CodeBreaker {
     //the answer
-    var aMasterRowOfPegs = ArowOfPegs(kind: .master)
+    var aMasterRowOfPegs = Code(kind: .master)
     // an attempt
-    var aGuessRowOfPegs = ArowOfPegs(kind: .guess)
+    var aGuessRowOfPegs = Code(kind: .guess)
     //list of previous attemps
-    var attempts = [ArowOfPegs]()
+    var attempts = [Code]()
     // list of color options
     let pegChoices: [Peg] = [.green, .red, .blue, .yellow]
 
+    // var matches:[Match]{
+    //     switch kind{
+    //     case
+    //     }
+    // }
+
+    mutating func attemptGuess() {
+        var attempt = aGuessRowOfPegs
+        attempt.kind = .attempt(<#T##[Match]#>)
+        attempts.append(attempt)
+    }
+
     mutating func changeThisPeg(at index: Int) {
         //the color of that peg that was already there
-        let existingPeg = aGuessRowOfPegs.pegs[index]
+        var existingPeg = aGuessRowOfPegs.pegs[index]
 
         //get the peg aka color of the clicked on peg
-        let indexOfExistingPegInPegChoices = pegChoices.firstIndex(
+        //if its not nil
+        if var indexOfExistingPegInPegChoices = pegChoices.firstIndex(
             of: existingPeg
-        )
-        
-        //if it exists..cuz the method is optional
-        if indexOfExistingPegInPegChoices != nil {
-
-            //go to the next color
-            var newIndex = (indexOfExistingPegInPegChoices ?? 0) + 1
-            //if at the end return to 0
-            if newIndex == 4 {
-                newIndex = 0
-            }
+        ) {
             //get the peg aka color of the next peg index
-            let newPeg = pegChoices[newIndex]
-            
             // replace that existing peg with the new peg/color
-            aGuessRowOfPegs.pegs[index] = newPeg
+            aGuessRowOfPegs.pegs[index] =
+                pegChoices[
+                    (indexOfExistingPegInPegChoices + 1) % pegChoices.count
+                ]
         } else {
             // if it doesnt exist then set it to clear
-            // why would it be missing tho idk could be error handling
-            aGuessRowOfPegs.pegs[index] = pegChoices.first ?? ArowOfPegs.missing
+            // why would it be missing? when its starting all are set to clear
+            aGuessRowOfPegs.pegs[index] = pegChoices.first ?? Code.missing
         }
     }
 }
 
-struct ArowOfPegs {
+struct Code {
     var kind: Kind
     var pegs: [Peg] = [.green, .red, .red, .yellow]
     static let missing: Peg = .clear
-    enum Kind {
+
+    enum Kind: Equatable {
         case master
         case guess
-        case attempt
+        case attempt([Match])
         case unknown
+    }
+
+    func match(against otherCode: Code) -> [Match] {
+        var results: [Match] = Array(
+            repeating: .nomatch,
+            count: pegs.count
+        )
+
+        var pegsToMatch = otherCode.pegs
+        for index in pegs.indices.reversed() {
+            if pegsToMatch.count > index,
+                pegsToMatch[index] == pegs[index]
+            {
+                results[index] = .exact
+                pegsToMatch.remove(at: index)
+            }
+        }
+        for index in pegs.indices {
+            if results[index] != .exact {
+                if let matchIndex = pegsToMatch.firstIndex(
+                    of: pegs[index]
+                ) {
+                    results[index] = .inexact
+                    pegsToMatch.remove(at: matchIndex)
+                }
+            }
+        }
+        return results
     }
 
 }
