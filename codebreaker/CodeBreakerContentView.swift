@@ -21,10 +21,11 @@ struct CodeBreakerContentView: View {
                 }
                 Button("Guess") {
                     withAnimation {
-                           game.()
+                        game.attemptGuess()
                     }
 
-                }
+                }.font(.system(size: 80))
+                    .minimumScaleFactor(0.1)
             }.padding()
         }
 
@@ -43,9 +44,7 @@ struct CodeBreakerContentView: View {
 
             }
             MatchMarkers(
-                matches: game.aGuessRowOfPegs.match(
-                    against: game.aMasterRowOfPegs
-                )
+                matches: code.matches
             )
 
         }.padding()

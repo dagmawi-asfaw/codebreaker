@@ -56,7 +56,8 @@ struct CodeBreaker {
 
 struct Code {
     var kind: Kind
-    var pegs: [Peg] = [.green, .red, .red, .yellow]
+    var pegs: [Peg] = Array(
+    
     static let missing: Peg = .clear
 
     enum Kind: Equatable {
@@ -64,6 +65,13 @@ struct Code {
         case guess
         case attempt([Match])
         case unknown
+    }
+    
+    var matches:[Match]{
+        switch kind{
+        case .attempt(let matches): return matches
+        default: return []
+        }
     }
 
     func match(against otherCode: Code) -> [Match] {
